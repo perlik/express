@@ -1,32 +1,80 @@
 const Note = require('../../db/models/note');
 
 class NoteActions {
-  getAllNotes(req, res) {
-    res.send('ok');
+  async getAllNotes(req, res) {
+    let doc;
+
+    try {
+      doc = await Note.find({});
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+
+    res.status(200).json(doc);
   }
 
-  getNote(req, res) {
-    res.send('ok');
-  }
-
-  saveNote(req, res) {
-    const newNote = new Note({ title: req.body.title, body: req.body.body });
-
-    newNote.save().then(() => {
-      console.log('saved');
-    });
-
-    res.send('ok');
-  }
-
-  updateNote(req, res) {
-    res.send('ok');
-  }
-
-  deleteNote(req, res) {
+  async getNote(req, res) {
     const id = req.params.id;
 
-    res.send(`ok ${id}`);
+    let doc;
+
+    try {
+      doc = await Note.findOne({ _id: id });
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+
+    res.status(200).json(doc);
+  }
+
+  async saveNote(req, res) {
+    const { title, body } = req.body;
+
+    const note = new Note({ title, body });
+
+    try {
+      await note.save();
+    } catch (err) {
+      return res.status(422).json({ message: err.message });
+    }
+
+    res.status(201).json(note);
+  }
+
+  async updateNote(req, res) {
+    const { id } = req.params;
+    const { title, body } = req.body;
+
+    let note;
+
+    try {
+      note = await Note.findOne({ _id: id });
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+
+    note.title = title;
+    note.body = body;
+
+    try {
+      await note.save();
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+
+    res.status(201).json(note);
+  }
+
+  async deleteNote(req, res) {
+    const id = req.params.id;
+
+    try {
+      await Note.deleteOne({ _id: id });
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+
+    res.sendStatus(204);
   }
 }
 
