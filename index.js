@@ -1,12 +1,14 @@
-const express = require("express");
+const express = require('express');
+const { port } = require('./config');
+require('./db/mongoose');
+
 const app = express();
-const config = require("./config");
 
 //routes
-const apiRouter = require("./routes/api");
-app.use("/", apiRouter);
+const apiRouter = require('./routes/api');
+app.use('/', apiRouter);
 
 // server
-app.listen(config.port, () => {
-  console.log("listening");
+app.listen(port, () => {
+  console.log('listening');
 });
