@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const { port } = require('./config');
 
@@ -9,6 +10,9 @@ require('./db/mongoose');
 
 // parser
 app.use(bodyParser.json());
+
+// cors
+app.use(cors());
 
 // routes
 const apiRouter = require('./routes/api');
