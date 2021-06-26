@@ -1,7 +1,11 @@
 const express = require('express');
-const notesActions = require('../actions/api/notes');
+const NoteActions = require('../actions/api/noteActions');
 
 const router = express.Router();
-router.get('/', notesActions.saveNote);
+router.get('/notes', NoteActions.getAllNotes);
+router.get('/notes/:id', NoteActions.getNote);
+router.post('/notes', NoteActions.saveNote);
+router.put('/notes/:id', NoteActions.updateNote);
+router.delete('/notes/:id', NoteActions.deleteNote);
 
 module.exports = router;
